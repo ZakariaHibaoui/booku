@@ -16,16 +16,15 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ma.ac.uit.ensa.ssi.Booku.adapter.BookRecycler;
-import ma.ac.uit.ensa.ssi.Booku.composent.GridSpacingItemDecoration;
+import ma.ac.uit.ensa.ssi.Booku.component.GridSpacingItemDecoration;
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
+import ma.ac.uit.ensa.ssi.Booku.storage.Database;
+import ma.ac.uit.ensa.ssi.Booku.storage.bookDAO;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView books_view;
-    private List<Book> books = new ArrayList<>();
+    private Database db;
+    private bookDAO book_access;
 
 
     @Override
@@ -39,33 +38,26 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Dialog dialog = new Dialog(MainActivity.this, android.R.style.Theme_Light_NoTitleBar_Fullscreen);;
+        Dialog dialog = new Dialog(MainActivity.this, android.R.style.Theme_Light_NoTitleBar_Fullscreen);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.splash_screen);
         dialog.setCancelable(true);
         dialog.show();
 
         new Thread(() -> {
-            // TODO: Await main page to fully load instead of this
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                // Do nothing...
-            }
+            db          = new Database(this.getBaseContext());
+            book_access = new bookDAO(db);
+
+            RecyclerView books_view = findViewById(R.id.book_view);
+            books_view.setLayoutManager(new GridLayoutManager(this, 2));
+
+            int spacing = getResources().getDimensionPixelSize(R.dimen.book_grid_spacing);
+            books_view.addItemDecoration(new GridSpacingItemDecoration(2, spacing, true));
+            BookRecycler adapter = new BookRecycler(book_access);
+            books_view.setAdapter(adapter);
+
             runOnUiThread(() -> dialog.dismiss());
         }).start();
-
-        books.add(new Book(1, "1", "1"));
-        books.add(new Book(2, "2", "2"));
-        books.add(new Book(3, "3", "3"));
-
-        books_view = findViewById(R.id.book_view);
-        books_view.setLayoutManager(new GridLayoutManager(this, 2));
-
-        int spacing = getResources().getDimensionPixelSize(R.dimen.book_grid_spacing);
-        books_view.addItemDecoration(new GridSpacingItemDecoration(2, spacing, true));
-        BookRecycler adapter = new BookRecycler(books);
-        books_view.setAdapter(adapter);
     }
 
     @Override

@@ -1,8 +1,8 @@
-package ma.ac.uit.ensa.ssi.Booku.composent;
+package ma.ac.uit.ensa.ssi.Booku.component;
 
 import android.graphics.Rect;
 import android.view.View;
-import androidx.annotation.NonNull;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {

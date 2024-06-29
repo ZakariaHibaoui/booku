@@ -1,6 +1,7 @@
 package ma.ac.uit.ensa.ssi.Booku.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,15 @@ import java.util.List;
 
 import ma.ac.uit.ensa.ssi.Booku.R;
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
+import ma.ac.uit.ensa.ssi.Booku.storage.bookDAO;
 
 public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
+    private bookDAO bookaccess;
     private List<Book> books;
 
-    public BookRecycler(List<Book> books) {
-        this.books = books;
+    public BookRecycler(bookDAO bookaccess) {
+        this.bookaccess = bookaccess;
+        this.books      = this.bookaccess.getAllBooks();
     }
 
     @NonNull
