@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(() -> dialog.dismiss());
         }).start();
 
-        books.add(new Book(1, "1", "1"));
-        books.add(new Book(2, "2", "2"));
-        books.add(new Book(3, "3", "3"));
+        //books.add(new Book(1, "1", "1"));
+        //books.add(new Book(2, "2", "2"));
+        //books.add(new Book(3, "3", "3"));
 
         books_view = findViewById(R.id.book_view);
         books_view.setLayoutManager(new GridLayoutManager(this, 2));

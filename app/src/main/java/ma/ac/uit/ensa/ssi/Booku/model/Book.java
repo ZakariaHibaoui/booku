@@ -2,11 +2,11 @@ package ma.ac.uit.ensa.ssi.Booku.model;
 
 // No record :/
 public class Book {
-    private Integer id;
+    private Long id;
     private String name;
     private String isbn;
 
-    public Book(Integer id, String name, String isbn) {
+    public Book(Long id, String name, String isbn) {
         this.id   = id;
         this.name = name;
         this.isbn = isbn;
@@ -19,10 +19,10 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
