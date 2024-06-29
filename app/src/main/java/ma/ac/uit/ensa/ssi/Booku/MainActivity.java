@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ma.ac.uit.ensa.ssi.Booku.adapter.BookRecycler;
-import ma.ac.uit.ensa.ssi.Booku.composent.GridSpacingItemDecoration;
+import ma.ac.uit.ensa.ssi.Booku.component.GridSpacingItemDecoration;
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
 
 public class MainActivity extends AppCompatActivity {
