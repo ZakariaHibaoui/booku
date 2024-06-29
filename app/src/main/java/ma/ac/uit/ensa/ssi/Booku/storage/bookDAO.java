@@ -1,11 +1,14 @@
 package ma.ac.uit.ensa.ssi.Booku.storage;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
 
@@ -90,5 +93,27 @@ public class bookDAO {
         cursor.close();
         db.close();
         return b;
+    }
+
+    @SuppressLint("Range")
+    public List<Book> getAllBooks() {
+        SQLiteDatabase db   = sdb.getReadableDatabase();
+        List<Book> bookList = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                long id     = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                String isbn = cursor.getString(cursor.getColumnIndex(COLUMN_ISBN));
+                String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+
+                Book book = new Book(id, isbn, name);
+                bookList.add(book);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return bookList;
     }
 }
