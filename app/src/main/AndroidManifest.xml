@@ -23,12 +23,7 @@
         </activity>
         <activity
             android:name=".ui.AddBookActivity"
-            android:label="@string/add_book"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
-        </activity>
+            android:label="@string/add_book" />
     </application>
 
 </manifest>

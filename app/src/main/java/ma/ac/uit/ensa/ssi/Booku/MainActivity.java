@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ma.ac.uit.ensa.ssi.Booku.adapter.BookRecycler;
 import ma.ac.uit.ensa.ssi.Booku.component.GridSpacingItemDecoration;
-import ma.ac.uit.ensa.ssi.Booku.model.Book;
 import ma.ac.uit.ensa.ssi.Booku.storage.Database;
 import ma.ac.uit.ensa.ssi.Booku.storage.bookDAO;
 
