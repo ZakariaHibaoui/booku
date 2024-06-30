@@ -16,6 +16,7 @@ import java.util.List;
 import ma.ac.uit.ensa.ssi.Booku.R;
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
 import ma.ac.uit.ensa.ssi.Booku.storage.BookDAO;
+import ma.ac.uit.ensa.ssi.Booku.utils.OnItemSelectedListener;
 
 public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
     private final BookDAO bookaccess;
@@ -25,10 +26,13 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
 
     private int selectedItem = RecyclerView.NO_POSITION;
 
-    public BookRecycler(Context ctx, BookDAO bookaccess) {
+    private final OnItemSelectedListener listener;
+
+    public BookRecycler(Context ctx, OnItemSelectedListener listener, BookDAO bookaccess) {
         this.bookaccess = bookaccess;
         this.books      = this.bookaccess.getAllBooks();
         this.ctx        = ctx;
+        this.listener   = listener;
     }
 
     public void addBook(Book book) {
@@ -62,6 +66,7 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
                 notifyItemChanged(previousSelected);
                 notifyItemChanged(selectedItem);
             }
+            listener.onItemSelected();
             return true;
         });
 
@@ -72,6 +77,14 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
             color = ContextCompat.getColor(ctx, R.color.default_background);
         }
         holder.itemView.setBackgroundTintList(ColorStateList.valueOf(color));
+    }
+
+    public void unselectAll() {
+        if (selectedItem != RecyclerView.NO_POSITION) {
+            int old      = selectedItem;
+            selectedItem = RecyclerView.NO_POSITION;
+            notifyItemChanged(old);
+        }
     }
 
     @Override
