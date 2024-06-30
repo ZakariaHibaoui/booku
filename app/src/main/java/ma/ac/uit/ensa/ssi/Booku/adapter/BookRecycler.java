@@ -70,6 +70,15 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
             return true;
         });
 
+        holder.itemView.setOnClickListener(v -> {
+            if (selectedItem != RecyclerView.NO_POSITION && selectedItem != holder.getAdapterPosition()) {
+                int previousSelected = selectedItem;
+                selectedItem = holder.getAdapterPosition();
+                notifyItemChanged(previousSelected);
+                notifyItemChanged(selectedItem);
+            }
+        });
+
         int color;
         if (selectedItem == holder.getAdapterPosition()) {
             color = ContextCompat.getColor(ctx, R.color.selected);
