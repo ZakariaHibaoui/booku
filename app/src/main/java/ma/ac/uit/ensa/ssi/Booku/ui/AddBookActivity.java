@@ -3,8 +3,6 @@ package ma.ac.uit.ensa.ssi.Booku.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,22 +11,15 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ma.ac.uit.ensa.ssi.Booku.R;
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
 import ma.ac.uit.ensa.ssi.Booku.storage.BookDAO;
 import ma.ac.uit.ensa.ssi.Booku.storage.DatabaseError;
+import ma.ac.uit.ensa.ssi.Booku.utils.Isbn;
 
 public class AddBookActivity extends AppCompatActivity {
-    static final Pattern isbn10_pattern = Pattern.compile("^(?:ISBN(?:-10)?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$)[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$");
-    static final Pattern isbn13_pattern = Pattern.compile("^(?:ISBN(?:-13)?:? )?(?=[0-9]{13}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)97[89][- ]?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9]$");
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +39,8 @@ public class AddBookActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.empty_book_isbn), Toast.LENGTH_SHORT).show();
                 return;
             }
-            Matcher matcher10 = isbn10_pattern.matcher(isbn.getText());
-            Matcher matcher13 = isbn13_pattern.matcher(isbn.getText());
-            if (!matcher10.matches() && !matcher13.matches()) {
+
+            if (!Isbn.is_valid(isbn.getText().toString())) {
                 Toast.makeText(this, getString(R.string.invalid_book_isbn), Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -70,8 +60,10 @@ public class AddBookActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+                book_access.close();
                 return;
             }
+            book_access.close();
 
             Toast.makeText(
                     this,
