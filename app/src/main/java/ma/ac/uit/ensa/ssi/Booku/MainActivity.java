@@ -1,5 +1,6 @@
 package ma.ac.uit.ensa.ssi.Booku;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -19,13 +22,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ma.ac.uit.ensa.ssi.Booku.adapter.BookRecycler;
 import ma.ac.uit.ensa.ssi.Booku.component.GridSpacingItemDecoration;
-import ma.ac.uit.ensa.ssi.Booku.storage.Database;
-import ma.ac.uit.ensa.ssi.Booku.storage.bookDAO;
+import ma.ac.uit.ensa.ssi.Booku.model.Book;
+import ma.ac.uit.ensa.ssi.Booku.storage.BookDAO;
 
 public class MainActivity extends AppCompatActivity {
-    private Database db;
-    private bookDAO book_access;
+    private BookDAO book_access;
 
+    RecyclerView books_view;
+    BookRecycler adapter;
+
+    ActivityResultLauncher<Intent> add_book_activity_ret;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +51,30 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
 
         new Thread(() -> {
-            db          = new Database(this.getBaseContext());
-            book_access = new bookDAO(db);
+            book_access = new BookDAO(this.getBaseContext());
 
-            RecyclerView books_view = findViewById(R.id.book_view);
+            books_view = findViewById(R.id.book_view);
             books_view.setLayoutManager(new GridLayoutManager(this, 2));
 
             int spacing = getResources().getDimensionPixelSize(R.dimen.book_grid_spacing);
             books_view.addItemDecoration(new GridSpacingItemDecoration(2, spacing, true));
-            BookRecycler adapter = new BookRecycler(book_access);
+            adapter = new BookRecycler(book_access);
             books_view.setAdapter(adapter);
 
             runOnUiThread(() -> dialog.dismiss());
         }).start();
+
+        add_book_activity_ret = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+                        Intent data = result.getData();
+                        Book book = (Book)data.getSerializableExtra("addBook");
+                        adapter.addBook(book);
+                        books_view.smoothScrollToPosition(0);
+                    }
+                }
+        );
     }
 
     @Override
@@ -72,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         int i = item.getItemId();
         if (i == R.id.action_add) {
             Intent addBookIntent = new Intent(this, ma.ac.uit.ensa.ssi.Booku.ui.AddBookActivity.class);
-            startActivity(addBookIntent);
+            add_book_activity_ret.launch(addBookIntent);
         }
         return super.onOptionsItemSelected(item);
     }
