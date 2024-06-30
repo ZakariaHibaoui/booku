@@ -1,6 +1,7 @@
 package ma.ac.uit.ensa.ssi.Booku;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,7 +70,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // TODO: Add actions
+        int i = item.getItemId();
+        if (i == R.id.action_add) {
+            Intent addBookIntent = new Intent(this, ma.ac.uit.ensa.ssi.Booku.ui.AddBookActivity.class);
+            startActivity(addBookIntent);
+        }
         return super.onOptionsItemSelected(item);
     }
 }
