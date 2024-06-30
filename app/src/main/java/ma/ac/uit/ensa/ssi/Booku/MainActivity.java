@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
             int spacing = getResources().getDimensionPixelSize(R.dimen.book_grid_spacing);
             books_view.addItemDecoration(new GridSpacingItemDecoration(2, spacing, true));
-            adapter = new BookRecycler(book_access);
+            adapter = new BookRecycler(getApplicationContext(), book_access);
             books_view.setAdapter(adapter);
 
             runOnUiThread(() -> dialog.dismiss());

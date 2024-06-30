@@ -1,10 +1,13 @@
 package ma.ac.uit.ensa.ssi.Booku.adapter;
 
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,12 +18,17 @@ import ma.ac.uit.ensa.ssi.Booku.model.Book;
 import ma.ac.uit.ensa.ssi.Booku.storage.BookDAO;
 
 public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
-    private BookDAO bookaccess;
-    private List<Book> books;
+    private final BookDAO bookaccess;
+    private final List<Book> books;
 
-    public BookRecycler(BookDAO bookaccess) {
+    private final Context ctx;
+
+    private int selectedItem = RecyclerView.NO_POSITION;
+
+    public BookRecycler(Context ctx, BookDAO bookaccess) {
         this.bookaccess = bookaccess;
         this.books      = this.bookaccess.getAllBooks();
+        this.ctx        = ctx;
     }
 
     public void addBook(Book book) {
@@ -43,9 +51,27 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BookHolder holder, int position) {
-        Book book = books.get(position);
+    public void onBindViewHolder(@NonNull BookHolder holder, int view) {
+        Book book = books.get(holder.getAdapterPosition());
         holder.text.setText(book.getName() + "\n" + book.getIsbn());
+
+        holder.itemView.setOnLongClickListener(v -> {
+            if (selectedItem != holder.getAdapterPosition()) {
+                int previousSelected = selectedItem;
+                selectedItem = holder.getAdapterPosition();
+                notifyItemChanged(previousSelected);
+                notifyItemChanged(selectedItem);
+            }
+            return true;
+        });
+
+        int color;
+        if (selectedItem == holder.getAdapterPosition()) {
+            color = ContextCompat.getColor(ctx, R.color.selected);
+        } else {
+            color = ContextCompat.getColor(ctx, R.color.default_background);
+        }
+        holder.itemView.setBackgroundTintList(ColorStateList.valueOf(color));
     }
 
     @Override
