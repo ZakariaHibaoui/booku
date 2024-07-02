@@ -19,4 +19,5 @@
     <string name="isbn_exists">Book with ISBN %s already exists</string>
     <string name="book_added">Book with ISBN %s added</string>
     <string name="book_edited">Book with ISBN %s edited</string>
+    <string name="book_deleted">Book with ISBN %s deleted</string>
 </resources>

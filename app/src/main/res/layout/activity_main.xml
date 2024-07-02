@@ -23,7 +23,7 @@
         android:visibility="invisible"
         android:gravity="end">
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/delete_action"
+            android:id="@+id/action_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

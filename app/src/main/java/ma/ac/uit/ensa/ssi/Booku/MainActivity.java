@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -32,6 +33,7 @@ import ma.ac.uit.ensa.ssi.Booku.adapter.BookRecycler;
 import ma.ac.uit.ensa.ssi.Booku.component.GridSpacingItemDecoration;
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
 import ma.ac.uit.ensa.ssi.Booku.storage.BookDAO;
+import ma.ac.uit.ensa.ssi.Booku.storage.DatabaseError;
 import ma.ac.uit.ensa.ssi.Booku.utils.OnItemSelectedListener;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
@@ -134,6 +136,24 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 Intent editBookIntent = new Intent(this, ma.ac.uit.ensa.ssi.Booku.ui.EditBookActivity.class);
                 editBookIntent.putExtra("book", adapter.getSelectedBook());
                 edit_book_activity_ret.launch(editBookIntent);
+            });
+
+            FloatingActionButton delete = findViewById(R.id.action_delete);
+            delete.setOnClickListener(v -> {
+                Book book = adapter.getSelectedBook();
+                try {
+                    book_access.deleteBook(book.getId());
+                } catch (DatabaseError e) {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Toast.makeText(
+                        this,
+                        String.format(getString(R.string.book_deleted), book.getIsbn()),
+                        Toast.LENGTH_SHORT
+                ).show();
+                adapter.deleteSelectedBook();
+                onRelease();
             });
         }
         return super.onCreateOptionsMenu(menu);

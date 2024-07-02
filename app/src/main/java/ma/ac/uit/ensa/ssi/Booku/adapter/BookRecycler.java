@@ -49,6 +49,11 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
         notifyItemChanged(selectedItem);
     }
 
+    public void deleteSelectedBook() {
+        books.remove(selectedItem);
+        notifyItemRemoved(selectedItem);
+    }
+
     @NonNull
     @Override
     public BookHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
