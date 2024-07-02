@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     BookRecycler adapter;
 
     ActivityResultLauncher<Intent> add_book_activity_ret;
+    ActivityResultLauncher<Intent> edit_book_activity_ret;
 
     enum MenuType {
         Normal,
@@ -91,6 +92,19 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                     }
                 }
         );
+
+        edit_book_activity_ret = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+                        Intent data = result.getData();
+                        Book book = (Book)data.getSerializableExtra("editBook");
+                        adapter.editSelectedBook(book);
+                        onRelease();
+                        adapter.unselectAll();
+                    }
+                }
+        );
     }
 
     @Override
@@ -113,6 +127,13 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             cancel.setOnClickListener(v -> {
                 onRelease();
                 adapter.unselectAll();
+            });
+
+            ImageView edit = findViewById(R.id.action_edit);
+            edit.setOnClickListener(v -> {
+                Intent editBookIntent = new Intent(this, ma.ac.uit.ensa.ssi.Booku.ui.EditBookActivity.class);
+                editBookIntent.putExtra("book", adapter.getSelectedBook());
+                edit_book_activity_ret.launch(editBookIntent);
             });
         }
         return super.onCreateOptionsMenu(menu);

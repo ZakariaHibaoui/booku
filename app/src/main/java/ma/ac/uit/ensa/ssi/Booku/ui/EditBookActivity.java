@@ -48,6 +48,9 @@ public class EditBookActivity extends AppCompatActivity {
                 return;
             }
 
+            book.setName(name.getText().toString());
+            book.setIsbn(isbn.getText().toString());
+
             BookDAO book_access = new BookDAO(this.getBaseContext());
             try {
                 book_access.updateBook(book);
@@ -68,12 +71,12 @@ public class EditBookActivity extends AppCompatActivity {
 
             Toast.makeText(
                     this,
-                    String.format(getString(R.string.book_added), isbn.getText()),
+                    String.format(getString(R.string.book_edited), isbn.getText()),
                     Toast.LENGTH_LONG
             ).show();
 
             Intent ret = new Intent();
-            ret.putExtra("editBook", book.getId());
+            ret.putExtra("editBook", book);
             setResult(Activity.RESULT_OK, ret);
             finish();
         });

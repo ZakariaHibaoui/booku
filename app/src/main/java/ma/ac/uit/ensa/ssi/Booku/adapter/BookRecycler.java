@@ -40,6 +40,15 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
         this.notifyItemInserted(0);
     }
 
+    public Book getSelectedBook() {
+        return books.get(selectedItem);
+    }
+
+    public void editSelectedBook(Book book) {
+        books.set(selectedItem, book);
+        notifyItemChanged(selectedItem);
+    }
+
     @NonNull
     @Override
     public BookHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
