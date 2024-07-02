@@ -85,11 +85,16 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
         });
 
         holder.itemView.setOnClickListener(v -> {
-            if (selectedItem != RecyclerView.NO_POSITION && selectedItem != holder.getAdapterPosition()) {
-                int previousSelected = selectedItem;
-                selectedItem = holder.getAdapterPosition();
-                notifyItemChanged(previousSelected);
-                notifyItemChanged(selectedItem);
+            if (selectedItem != RecyclerView.NO_POSITION) {
+                if (selectedItem != holder.getAdapterPosition()) {
+                    int previousSelected = selectedItem;
+                    selectedItem = holder.getAdapterPosition();
+                    notifyItemChanged(previousSelected);
+                    notifyItemChanged(selectedItem);
+                } else {
+                    unselectAll();
+                    listener.onRelease();
+                }
             }
         });
 
