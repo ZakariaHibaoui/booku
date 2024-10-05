@@ -34,6 +34,7 @@ import ma.ac.uit.ensa.ssi.Booku.component.GridSpacingItemDecoration;
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
 import ma.ac.uit.ensa.ssi.Booku.storage.BookDAO;
 import ma.ac.uit.ensa.ssi.Booku.storage.DatabaseError;
+import ma.ac.uit.ensa.ssi.Booku.utils.FileUtils;
 import ma.ac.uit.ensa.ssi.Booku.utils.OnItemSelectedListener;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
@@ -102,9 +103,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                         Intent data = result.getData();
                         Book book = (Book)data.getSerializableExtra("editBook");
                         adapter.editSelectedBook(book);
-                        onRelease();
-                        adapter.unselectAll();
                     }
+                    onRelease();
+                    adapter.unselectAll();
                 }
         );
     }
@@ -154,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 ).show();
                 adapter.deleteSelectedBook();
                 onRelease();
+
+                FileUtils.delete(this, book.getIsbn() + ".jpg");
             });
         }
         return super.onCreateOptionsMenu(menu);

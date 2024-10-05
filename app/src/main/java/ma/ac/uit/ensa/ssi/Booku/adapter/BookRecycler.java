@@ -16,6 +16,7 @@ import java.util.List;
 import ma.ac.uit.ensa.ssi.Booku.R;
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
 import ma.ac.uit.ensa.ssi.Booku.storage.BookDAO;
+import ma.ac.uit.ensa.ssi.Booku.utils.FileUtils;
 import ma.ac.uit.ensa.ssi.Booku.utils.OnItemSelectedListener;
 
 public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
@@ -72,6 +73,7 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
     public void onBindViewHolder(@NonNull BookHolder holder, int view) {
         Book book = books.get(holder.getAdapterPosition());
         holder.text.setText(book.getName() + "\n" + book.getIsbn());
+        FileUtils.setImageFromPath(holder.itemView.getContext(), holder.cover, book.getIsbn() + ".jpg", R.drawable.no_cover);
 
         holder.itemView.setOnLongClickListener(v -> {
             if (selectedItem != holder.getAdapterPosition()) {
