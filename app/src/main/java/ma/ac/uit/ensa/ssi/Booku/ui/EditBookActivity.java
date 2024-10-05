@@ -31,6 +31,7 @@ public class EditBookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.edit_book));
         EdgeToEdge.enable(this);
         setContentView(R.layout.edit_book_activity);
 

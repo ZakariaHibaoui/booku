@@ -32,6 +32,7 @@ public class AddBookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.add_book));
         EdgeToEdge.enable(this);
         setContentView(R.layout.add_book_activity);
 

@@ -25,11 +25,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.AddBookActivity"
-            android:label="@string/add_book" />
+            android:name=".ui.AddBookActivity" />
         <activity
-            android:name=".ui.EditBookActivity"
-            android:label="@string/edit_book" />
+            android:name=".ui.EditBookActivity" />
 
         <activity android:name=".ui.SettingsActivity"
             android:configChanges="locale|orientation" />
