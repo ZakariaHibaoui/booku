@@ -30,6 +30,9 @@
         <activity
             android:name=".ui.EditBookActivity"
             android:label="@string/edit_book" />
+
+        <activity android:name=".ui.SettingsActivity"
+            android:configChanges="locale|orientation" />
     </application>
 
 </manifest>

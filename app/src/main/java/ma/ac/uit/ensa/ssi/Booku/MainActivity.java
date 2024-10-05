@@ -34,8 +34,10 @@ import ma.ac.uit.ensa.ssi.Booku.component.GridSpacingItemDecoration;
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
 import ma.ac.uit.ensa.ssi.Booku.storage.BookDAO;
 import ma.ac.uit.ensa.ssi.Booku.storage.DatabaseError;
+import ma.ac.uit.ensa.ssi.Booku.ui.SettingsActivity;
 import ma.ac.uit.ensa.ssi.Booku.utils.FileUtils;
 import ma.ac.uit.ensa.ssi.Booku.utils.OnItemSelectedListener;
+import ma.ac.uit.ensa.ssi.Booku.utils.SettingsUtil;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
     private BookDAO book_access;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SettingsUtil.setup_defaults(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -81,7 +84,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             adapter = new BookRecycler(getApplicationContext(), this, book_access);
             books_view.setAdapter(adapter);
 
-            runOnUiThread(() -> dialog.dismiss());
+            runOnUiThread(() -> {
+                dialog.dismiss();
+            });
         }).start();
 
         add_book_activity_ret = registerForActivityResult(
@@ -168,6 +173,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         if (i == R.id.action_add) {
             Intent addBookIntent = new Intent(this, ma.ac.uit.ensa.ssi.Booku.ui.AddBookActivity.class);
             add_book_activity_ret.launch(addBookIntent);
+        } else if (i == R.id.settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

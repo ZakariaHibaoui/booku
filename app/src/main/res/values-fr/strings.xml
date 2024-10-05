@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Booku</string>
+    <string name="splash_screen_logo_desc">Splash screen icon</string>
+    <string name="action_settings">Parametres</string>
+    <string name="action_add">Ajouter</string>
+    <string name="action_cancel">Editer</string>
+    <string name="action_delete">Supprimer</string>
+
+    <string name="add_book">Ajouter Livre</string>
+    <string name="edit_book">Modifier Livre</string>
+    <string name="add_isbn">ISBN</string>
+    <string name="add_name">Nom</string>
+    <string name="add_button">Ajouter</string>
+    <string name="edit_button">Modifier</string>
+
+    <string name="empty_book_name">Le nom du livre ne doit pas être vide</string>
+    <string name="empty_book_isbn">L\'ISBN du livre ne doit pas être vide</string>
+    <string name="invalid_book_isbn">Le livre a un ISBN invalide</string>
+    <string name="isbn_exists">Un livre avec l\'ISBN %s existe déjà</string>
+    <string name="book_added">Livre avec l\'ISBN %s ajouté</string>
+    <string name="book_edited">Livre avec l\'ISBN %s modifié</string>
+    <string name="book_deleted">Livre avec l\'ISBN %s supprimé</string>
+
+    <string name="sel_book_cover">Sélectionner la couverture du livre</string>
+
+    <string name="dark_mode_desc">Activez ce switch pour activer le mode sombre</string>
+    <string name="dark_mode">Mode sombre</string>
+    <string name="pick_lang">Choisir la langue</string>
+    <string name="pick_lang_desc">Choisissez votre langue préférée</string>
+
+    <string name="confirm">Confirmation</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="conf_change_restart">Ce changement nécessite de redémarrer l\'application. Acceptez-vous cela ?</string>
+
+</resources>
