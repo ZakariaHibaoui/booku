@@ -20,4 +20,6 @@
     <string name="book_added">Book with ISBN %s added</string>
     <string name="book_edited">Book with ISBN %s edited</string>
     <string name="book_deleted">Book with ISBN %s deleted</string>
+
+    <string name="sel_book_cover">Select book cover</string>
 </resources>
