@@ -22,4 +22,15 @@
     <string name="book_deleted">Book with ISBN %s deleted</string>
 
     <string name="sel_book_cover">Select book cover</string>
-</resources>
+
+    <string name="dark_mode_desc">Toggle this switch to enable dark mode</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="pick_lang">Select language</string>
+    <string name="pick_lang_desc">Choose your preferred language</string>
+
+    <string name="confirm">Confirm</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="conf_change_restart">This change requires restarting the application. Do you agree to this?</string>
+
+    </resources>

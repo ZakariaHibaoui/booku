@@ -2,6 +2,7 @@ package ma.ac.uit.ensa.ssi.Booku.adapter;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +105,11 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
         if (selectedItem == holder.getAdapterPosition()) {
             color = ContextCompat.getColor(ctx, R.color.selected);
         } else {
-            color = ContextCompat.getColor(ctx, R.color.default_background);
+            TypedValue typedValue = new TypedValue();
+            holder.itemView.getContext()
+                    .getTheme()
+                    .resolveAttribute(android.R.attr.colorBackground, typedValue, true);
+            color = typedValue.data;
         }
         holder.itemView.setBackgroundTintList(ColorStateList.valueOf(color));
     }
