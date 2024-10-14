@@ -36,6 +36,8 @@ public class AddBookActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.add_book_activity);
 
+        BookDAO book_access = new BookDAO(this.getBaseContext());
+
         EditText name  = findViewById(R.id.add_name);
         EditText isbn  = findViewById(R.id.add_isbn);
         CardView cover = findViewById(R.id.add_cover);
@@ -60,8 +62,7 @@ public class AddBookActivity extends AppCompatActivity {
                 return;
             }
 
-            Book book           = new Book(0L, name.getText().toString(), isbn.getText().toString());
-            BookDAO book_access = new BookDAO(this.getBaseContext());
+            Book book = new Book(0L, name.getText().toString(), isbn.getText().toString());
 
             if (cover_picked) {
                 try {
@@ -75,35 +76,37 @@ public class AddBookActivity extends AppCompatActivity {
                 }
             }
 
-            try {
-                long id = book_access.addBook(book);
-                book.setId(id);
-            } catch (DatabaseError e) {
-                if (e.getType() == DatabaseError.ExceptionType.Constraint) {
-                    Toast.makeText(
-                            this,
-                            String.format(getString(R.string.isbn_exists), isbn.getText()),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                } else {
-                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                book_access.close();
-                return;
-            }
-            book_access.close();
-
-            Toast.makeText(
-                    this,
-                    String.format(getString(R.string.book_added), isbn.getText()),
-                    Toast.LENGTH_LONG
-            ).show();
-
-            Intent ret = new Intent();
-            ret.putExtra("addBook", book);
-            setResult(Activity.RESULT_OK, ret);
-            finish();
+            addBook(book_access, this, book);
         });
+    }
+
+    public static void addBook(BookDAO book_access, Activity ctx, Book book) {
+        try {
+            long id = book_access.addBook(book);
+            book.setId(id);
+        } catch (DatabaseError e) {
+            if (e.getType() == DatabaseError.ExceptionType.Constraint) {
+                Toast.makeText(
+                        ctx,
+                        String.format(ctx.getString(R.string.isbn_exists), book.getIsbn()),
+                        Toast.LENGTH_SHORT
+                ).show();
+            } else {
+                Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+
+        Toast.makeText(
+                ctx,
+                String.format(ctx.getString(R.string.book_added), book.getIsbn()),
+                Toast.LENGTH_LONG
+        ).show();
+
+        Intent ret = new Intent();
+        ret.putExtra("addBook", book);
+        ctx.setResult(Activity.RESULT_OK, ret);
+        ctx.finish();
     }
 
     @Override

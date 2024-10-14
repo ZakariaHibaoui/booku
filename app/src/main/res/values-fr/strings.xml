@@ -32,5 +32,16 @@
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="conf_change_restart">Ce changement nécessite de redémarrer l\'application. Acceptez-vous cela ?</string>
+    <string name="action_search">Recherche</string>
+    <string name="search_online">Rechercher un livre via Google Books :</string>
+    <string name="cancel">Annuler</string>
+    <string name="search_empty">Impossible de rechercher avec une requête vide</string>
+    <string name="search_wait">En attente du résultat de la recherche...</string>
+    <string name="search_error">Échec de la recherche, impossible d\'atteindre Google Books</string>
+    <string name="search_result">Resultats de recherche</string>
+    <string name="desc">Description</string>
+    <string name="no_desc">Pas de description</string>
+    <string name="search_add_confirm">Voulez-vous ajouter \"%s\" à votre bibliothèque ?</string>
+    <string name="adding_wait">Ajout du livre à la bibliothèque...</string>
 
 </resources>

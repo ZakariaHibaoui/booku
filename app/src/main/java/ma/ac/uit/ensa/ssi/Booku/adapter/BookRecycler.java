@@ -12,6 +12,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import ma.ac.uit.ensa.ssi.Booku.R;
@@ -21,7 +23,6 @@ import ma.ac.uit.ensa.ssi.Booku.utils.FileUtils;
 import ma.ac.uit.ensa.ssi.Booku.utils.OnItemSelectedListener;
 
 public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
-    private final BookDAO bookaccess;
     private final List<Book> books;
 
     private final Context ctx;
@@ -29,12 +30,25 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
     private int selectedItem = RecyclerView.NO_POSITION;
 
     private final OnItemSelectedListener listener;
+    private final OnItemClickListener clickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Book book);
+    }
 
     public BookRecycler(Context ctx, OnItemSelectedListener listener, BookDAO bookaccess) {
-        this.bookaccess = bookaccess;
-        this.books      = this.bookaccess.getAllBooks();
+        this.books      = bookaccess.getAllBooks();
         this.ctx        = ctx;
         this.listener   = listener;
+        this.clickListener = null;
+    }
+
+    public BookRecycler(Context ctx, OnItemSelectedListener listener, List<Book> books,
+                        OnItemClickListener clickListener) {
+        this.books      = books;
+        this.ctx        = ctx;
+        this.listener   = listener;
+        this.clickListener = clickListener;
     }
 
     public void addBook(Book book) {
@@ -54,6 +68,7 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
     public void deleteSelectedBook() {
         books.remove(selectedItem);
         notifyItemRemoved(selectedItem);
+        selectedItem = RecyclerView.NO_POSITION;
     }
 
     @NonNull
@@ -74,7 +89,12 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
     public void onBindViewHolder(@NonNull BookHolder holder, int view) {
         Book book = books.get(holder.getAdapterPosition());
         holder.text.setText(book.getName() + "\n" + book.getIsbn());
-        FileUtils.setImageFromPath(holder.itemView.getContext(), holder.cover, book.getIsbn() + ".jpg", R.drawable.no_cover);
+
+        Glide.with(holder.itemView.getContext())
+                .load(book.getCoverResource() != null ? book.getCoverResource()
+                        : holder.itemView.getContext().getFilesDir() + "/" + book.getIsbn() + ".jpg")
+                .error(R.drawable.no_cover)
+                .into(holder.cover);
 
         holder.itemView.setOnLongClickListener(v -> {
             if (selectedItem != holder.getAdapterPosition()) {
@@ -98,6 +118,8 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
                     unselectAll();
                     listener.onRelease();
                 }
+            } else if (clickListener != null) {
+                clickListener.onItemClick(book);
             }
         });
 

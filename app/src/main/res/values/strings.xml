@@ -32,5 +32,16 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="conf_change_restart">This change requires restarting the application. Do you agree to this?</string>
+    <string name="action_search">Search</string>
+    <string name="search_online">Search for a book via Google Books:</string>
+    <string name="cancel">Cancel</string>
+    <string name="search_empty">Can\'t search with empty query</string>
+    <string name="search_wait">Waiting for search result...</string>
+    <string name="search_error">Search failed, cannot reach Google Books</string>
+    <string name="search_result">Search results</string>
+    <string name="desc">Description</string>
+    <string name="no_desc">No description</string>
+    <string name="search_add_confirm">Do you want to add \"%s\" to your library?</string>
+    <string name="adding_wait">Adding book to library...</string>
 
-    </resources>
+</resources>

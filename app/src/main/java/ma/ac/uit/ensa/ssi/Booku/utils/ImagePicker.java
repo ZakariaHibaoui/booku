@@ -2,6 +2,7 @@ package ma.ac.uit.ensa.ssi.Booku.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,7 +13,11 @@ import android.widget.ImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
+
 import java.io.ByteArrayOutputStream;
+import java.util.concurrent.ExecutionException;
 
 
 public class ImagePicker {
@@ -36,6 +41,21 @@ public class ImagePicker {
 
     public static byte[] to_bytes(ImageView imageView) {
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        return baos.toByteArray();
+    }
+
+    public static byte[] downloadImage(String imageUrl, Context ctx)
+            throws ExecutionException, InterruptedException {
+        // Use Glide to download the image
+        FutureTarget<Bitmap> futureTarget = Glide.with(ctx)
+                .asBitmap()
+                .load(imageUrl)
+                .submit();
+
+        Bitmap bitmap = futureTarget.get();
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         return baos.toByteArray();

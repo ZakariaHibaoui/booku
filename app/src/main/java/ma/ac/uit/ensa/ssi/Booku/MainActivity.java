@@ -1,14 +1,17 @@
 package ma.ac.uit.ensa.ssi.Booku;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -19,21 +22,25 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
+
+import ma.ac.uit.ensa.ssi.Booku.BookAPI.API;
+import ma.ac.uit.ensa.ssi.Booku.BookAPI.BookResponse;
+import ma.ac.uit.ensa.ssi.Booku.BookAPI.Client;
 import ma.ac.uit.ensa.ssi.Booku.adapter.BookRecycler;
 import ma.ac.uit.ensa.ssi.Booku.component.GridSpacingItemDecoration;
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
 import ma.ac.uit.ensa.ssi.Booku.storage.BookDAO;
 import ma.ac.uit.ensa.ssi.Booku.storage.DatabaseError;
+import ma.ac.uit.ensa.ssi.Booku.ui.SearchResultActivity;
 import ma.ac.uit.ensa.ssi.Booku.ui.SettingsActivity;
 import ma.ac.uit.ensa.ssi.Booku.utils.FileUtils;
 import ma.ac.uit.ensa.ssi.Booku.utils.OnItemSelectedListener;
@@ -55,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     private MenuType menuType = MenuType.Normal;
 
+    private API api;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SettingsUtil.setup_defaults(this);
@@ -73,18 +82,18 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         dialog.setCancelable(true);
         dialog.show();
 
+        book_access = new BookDAO(this.getBaseContext());
+
+        books_view = findViewById(R.id.book_view);
+        books_view.setLayoutManager(new GridLayoutManager(this, 2));
+        int spacing = getResources().getDimensionPixelSize(R.dimen.book_grid_spacing);
+        books_view.addItemDecoration(new GridSpacingItemDecoration(2, spacing, true));
         new Thread(() -> {
-            book_access = new BookDAO(this.getBaseContext());
+            api = Client.getClient();
 
-            books_view = findViewById(R.id.book_view);
-            books_view.setLayoutManager(new GridLayoutManager(this, 2));
-
-            int spacing = getResources().getDimensionPixelSize(R.dimen.book_grid_spacing);
-            books_view.addItemDecoration(new GridSpacingItemDecoration(2, spacing, true));
             adapter = new BookRecycler(getApplicationContext(), this, book_access);
-            books_view.setAdapter(adapter);
-
             runOnUiThread(() -> {
+                books_view.setAdapter(adapter);
                 dialog.dismiss();
             });
         }).start();
@@ -176,6 +185,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         } else if (i == R.id.settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+        } else if (i == R.id.action_search) {
+            search();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -196,5 +207,55 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         RelativeLayout v = findViewById(R.id.bottom_action);
         v.setVisibility(View.INVISIBLE);
         books_view.setPadding(0, 0,0, 0);
+    }
+
+    private void search() {
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.search_online))
+                .setView(input)
+                .setPositiveButton(getString(R.string.action_search), (dialogInterface, i) -> {
+                    if (input.getText().toString().isEmpty()) {
+                        Toast.makeText(
+                                this, getString(R.string.search_empty), Toast.LENGTH_LONG
+                        ).show();
+                        return;
+                    }
+                    dialogInterface.dismiss();
+                    AlertDialog pending = new AlertDialog.Builder(this)
+                            .setMessage(getString(R.string.search_wait))
+                            .setCancelable(false)
+                            .create();
+                    pending.show();
+                    new Thread(() -> {
+                        BookResponse resp;
+                        try {
+                            resp = api.getBooks(input.getText().toString())
+                                    .execute()
+                                    .body();
+                        } catch (IOException e) {
+                            runOnUiThread(() -> {
+                                Toast.makeText(
+                                        this, getString(R.string.search_error), Toast.LENGTH_LONG
+                                ).show();
+                                pending.dismiss();
+                            });
+                            return;
+                        }
+                        runOnUiThread(() -> {
+                            Intent intent = new Intent(this, SearchResultActivity.class);
+                            intent.putExtra("resp", resp);
+                            add_book_activity_ret.launch(intent);
+                            pending.dismiss();
+                        });
+                    }).start();
+                })
+                .setNegativeButton(getString(R.string.cancel), (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                })
+                .create();
+        dialog.show();
     }
 }

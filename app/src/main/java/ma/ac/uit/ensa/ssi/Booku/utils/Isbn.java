@@ -13,4 +13,27 @@ public class Isbn {
 
         return matcher10.matches() || matcher13.matches();
     }
+
+    public static String formatISBN10(String isbn10) {
+        if (isbn10.length() != 10) {
+            throw new IllegalArgumentException("ISBN-10 must be 10 digits long.");
+        }
+
+        return isbn10.substring(0, 1) + "-" +
+                isbn10.substring(1, 4) + "-" +
+                isbn10.substring(4, 9) + "-" +
+                isbn10.substring(9);
+    }
+
+    public static String formatISBN13(String isbn13) {
+        if (isbn13.length() != 13) {
+            throw new IllegalArgumentException("ISBN-13 must be 13 digits long.");
+        }
+
+        return isbn13.substring(0, 3) + "-" +
+                isbn13.substring(3, 4) + "-" +
+                isbn13.substring(4, 8) + "-" +
+                isbn13.substring(8, 12) + "-" +
+                isbn13.substring(12);
+    }
 }
