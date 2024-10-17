@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.List;
 
@@ -93,6 +94,7 @@ public class BookRecycler extends RecyclerView.Adapter<BookHolder> {
         Glide.with(holder.itemView.getContext())
                 .load(book.getCoverResource() != null ? book.getCoverResource()
                         : holder.itemView.getContext().getFilesDir() + "/" + book.getIsbn() + ".jpg")
+                .signature(new ObjectKey(System.currentTimeMillis()))
                 .error(R.drawable.no_cover)
                 .into(holder.cover);
 
