@@ -64,23 +64,23 @@ public class AddBookActivity extends AppCompatActivity {
 
             Book book = new Book(0L, name.getText().toString(), isbn.getText().toString());
 
-            if (cover_picked) {
-                try {
-                    FileUtils.write(this, book.getIsbn() + ".jpg", ImagePicker.to_bytes(book_cover));
-                } catch (Exception e) {
-                    Toast.makeText(
-                            this,
-                            e.toString(),
-                            Toast.LENGTH_SHORT
-                    ).show();
+            if (addBook(book_access, this, book)) {
+                if (cover_picked) {
+                    try {
+                        FileUtils.write(this, book.getIsbn() + ".jpg", ImagePicker.to_bytes(book_cover));
+                    } catch (Exception e) {
+                        Toast.makeText(
+                                this,
+                                e.toString(),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
                 }
             }
-
-            addBook(book_access, this, book);
         });
     }
 
-    public static void addBook(BookDAO book_access, Activity ctx, Book book) {
+    public static boolean addBook(BookDAO book_access, Activity ctx, Book book) {
         try {
             long id = book_access.addBook(book);
             book.setId(id);
@@ -94,7 +94,7 @@ public class AddBookActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-            return;
+            return false;
         }
 
         Toast.makeText(
@@ -107,6 +107,8 @@ public class AddBookActivity extends AppCompatActivity {
         ret.putExtra("addBook", book);
         ctx.setResult(Activity.RESULT_OK, ret);
         ctx.finish();
+
+        return true;
     }
 
     @Override
