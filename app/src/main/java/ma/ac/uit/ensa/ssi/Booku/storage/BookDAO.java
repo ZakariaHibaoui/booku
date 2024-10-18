@@ -13,19 +13,49 @@ import java.util.List;
 
 import ma.ac.uit.ensa.ssi.Booku.model.Book;
 
+/**
+ * BookDAO est une classe responsable de la gestion des opérations CRUD
+ * (Create, Read, Update, Delete) pour les objets Book dans la base de données SQLite.
+ * Elle permet d'insérer, supprimer, mettre à jour et récupérer des livres stockés dans une table SQLite.
+ */
+
 public class BookDAO {
+
+     // Instance de la base de données utilisée pour effectuer les opérations SQLite
     public Database sdb;
 
+    // Constantes représentant les noms de la table et des colonnes dans la base de données SQLite
     static final String TABLE_NAME  = "book";
     static final String COLUMN_ID   = "id";
     static final String COLUMN_ISBN = "isbn";
     static final String COLUMN_NAME = "name";
 
+     /**
+     * Constructeur de la classe BookDAO.
+     * Initialise une instance de la base de données SQLite via la classe Database.
+     *
+     * @param ctx Le contexte de l'application nécessaire pour la connexion à SQLite.
+     */
+
     public BookDAO(Context ctx) {
         this.sdb = new Database(ctx);
     }
 
+     /**
+     * Ferme la connexion à la base de données.
+     * Cette méthode doit être appelée une fois que l'objet DAO n'est plus utilisé.
+     */
+
     public void close() { this.sdb.close(); }
+
+    /**
+     * Ajoute un nouveau livre dans la base de données.
+     * Si l'ISBN du livre existe déjà, une exception de type DatabaseError est lancée.
+     *
+     * @param book Un objet Book à insérer dans la base de données.
+     * @return L'ID du livre nouvellement ajouté.
+     * @throws DatabaseError Si une contrainte est violée (par exemple, l'ISBN existe déjà).
+     */
 
     public long addBook(Book book) throws DatabaseError {
         SQLiteDatabase db = sdb.get_write();
@@ -45,6 +75,14 @@ public class BookDAO {
         }
     }
 
+    /**
+     * Supprime un livre de la base de données par son ID.
+     * Si aucun livre ne correspond à l'ID fourni, une exception de type DatabaseError est lancée.
+     *
+     * @param id L'ID du livre à supprimer.
+     * @throws DatabaseError Si aucun livre n'est trouvé avec l'ID spécifié.
+     */
+
     public void deleteBook(long id) throws DatabaseError {
         SQLiteDatabase db = sdb.getWritableDatabase();
         int affected      = db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
@@ -53,6 +91,14 @@ public class BookDAO {
             throw new DatabaseError(DatabaseError.ExceptionType.NoMatch, "No book to delete with given id");
         }
     }
+
+     /**
+     * Met à jour les informations d'un livre dans la base de données.
+     * Si aucun livre n'est trouvé avec l'ID fourni, une exception de type DatabaseError est lancée.
+     *
+     * @param book L'objet Book contenant les informations à mettre à jour.
+     * @throws DatabaseError Si aucun livre n'est trouvé avec l'ID spécifié.
+     */
 
     public void updateBook(Book book) throws DatabaseError {
         SQLiteDatabase db    = sdb.getWritableDatabase();
@@ -72,6 +118,15 @@ public class BookDAO {
             throw new DatabaseError(DatabaseError.ExceptionType.NoMatch, "No book to update with given id");
         }
     }
+
+     /**
+     * Récupère un livre de la base de données par son ID.
+     * Si aucun livre n'est trouvé, une exception de type DatabaseError est lancée.
+     *
+     * @param id L'ID du livre à récupérer.
+     * @return Un objet Book contenant les informations du livre trouvé.
+     * @throws DatabaseError Si aucun livre n'est trouvé avec l'ID spécifié.
+     */
 
     public Book getBook(long id) throws DatabaseError {
         SQLiteDatabase db = sdb.getReadableDatabase();
@@ -97,6 +152,12 @@ public class BookDAO {
         db.close();
         return b;
     }
+
+    /**
+     * Récupère tous les livres de la base de données, triés par ordre décroissant d'ID.
+     *
+     * @return Une liste d'objets Book représentant tous les livres présents dans la base de données.
+     */
 
     @SuppressLint("Range")
     public List<Book> getAllBooks() {
